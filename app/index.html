@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>信号实验室 · Signal Lab</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    信号实验室
+    <span>Signal Lab</span>
+  </div>
+
+  <div class="presets" id="presets"></div>
+
+  <button class="qbtn" id="quizBtn" title="前测 / 后测：量一量自己学会了没有">效果验证</button>
+
+  <button class="qbtn qbtn--teacher" id="teacherBtn" title="教师端：分层出练习、看全班错因分布">教师端</button>
+
+  <button class="ai-status ai-status--checking" id="aiStatus" title="点击配置模型接入">
+    <i></i><span class="ai-status-text">正在找本机服务…</span>
+  </button>
+
+  <button class="reset" id="reset" title="恢复默认参数">重置</button>
+</header>
+
+<main class="layout">
+
+  <aside class="panel panel--controls">
+    <div class="panel-head">仪器旋钮</div>
+    <div class="controls" id="controls"></div>
+  </aside>
+
+  <section class="stage">
+
+    <nav class="tabs" id="tabs" role="tablist" aria-label="选择仪器">
+      <button class="tab on" data-instr="wave" role="tab" aria-selected="true">波形与频谱<span>示波器 · 频谱仪</span></button>
+      <button class="tab" data-instr="arr" role="tab" aria-selected="false">阵列测向<span>波从哪个方向来</span></button>
+      <button class="tab" data-instr="tf" role="tab" aria-selected="false">时频图<span>时间 × 频率</span></button>
+      <button class="tab" data-instr="con" role="tab" aria-selected="false">星座图<span>一个符号几个比特</span></button>
+      <button class="tab" data-instr="sb" role="tab" aria-selected="false">多径沙盒<span>自己摆楼</span></button>
+    </nav>
+
+    <div class="screens" id="screens" data-instr="wave">
+      <div class="screen-wrap screen-wrap--scope">
+        <canvas id="scope"></canvas>
+      </div>
+      <div class="screen-wrap screen-wrap--spectrum">
+        <canvas id="spectrum"></canvas>
+      </div>
+      <div class="screen-wrap screen-wrap--array">
+        <canvas id="array"></canvas>
+      </div>
+      <div class="screen-wrap screen-wrap--con">
+        <canvas id="con"></canvas>
+      </div>
+      <div class="screen-wrap screen-wrap--tf">
+        <canvas id="tf"></canvas>
+      </div>
+      <div class="screen-wrap screen-wrap--sb">
+        <canvas id="sb"></canvas>
+      </div>
+    </div>
+
+  </section>
+
+  <aside class="panel panel--advisor">
+    <div class="panel-tabs">
+      <button class="ptab active" data-tab="knowledge">知识伴随</button>
+      <button class="ptab" data-tab="ai">AI 助教</button>
+    </div>
+
+    <div class="tabpane" data-pane="knowledge">
+      <div class="panel-head">
+        面板上说的每句话，都能从屏幕上的波形推出来
+      </div>
+      <div class="advisor" id="advisor"></div>
+    </div>
+
+    <div class="tabpane" data-pane="ai" hidden>
+      <div class="tutor-head">
+        <span class="tutor-model" id="tutorModel"></span>
+        <button class="linkbtn" id="openSettings">接入模型</button>
+        <button class="linkbtn" id="clearChat">清空</button>
+      </div>
+
+      <div class="chat" id="chat"></div>
+
+      <div class="quick" id="quickAsks">
+        <button data-ask="屏幕上这个波为什么长这样？">这个波为什么长这样</button>
+        <button data-ask="我刚才拧的那个旋钮，到底改变了什么？">这个旋钮改变了什么</button>
+        <button data-ask="（出一道题考我。针对当前屏幕上的状态出题，只出题、先不要给答案。题目要能用屏幕上读得到的量算出来。）">考考我</button>
+      </div>
+
+      <div class="composer">
+        <textarea id="ask" rows="2" placeholder="问点什么……（Enter 发送，Shift+Enter 换行）"></textarea>
+        <button id="sendBtn">发送</button>
+      </div>
+    </div>
+  </aside>
+
+</main>
+
+<div class="overlay" id="quizOverlay" hidden>
+  <div class="overlay-card">
+    <header class="quiz-head">
+      <span class="quiz-title" id="quizTitle">效果验证</span>
+      <span class="quiz-meta" id="quizMeta"></span>
+      <button class="linkbtn" id="quizClose">关闭</button>
+    </header>
+    <div class="quiz-body" id="quizBody"></div>
+    <footer class="quiz-foot" id="quizFoot"></footer>
+  </div>
+</div>
+
+<div class="overlay" id="teacherOverlay" hidden>
+  <div class="overlay-card overlay-card--wide">
+    <header class="tch-head">
+      <span class="quiz-title">教师端</span>
+      <div class="tch-tabs" id="tchTabs">
+        <button data-tab="make" class="on">出练习</button>
+        <button data-tab="class">看全班</button>
+      </div>
+      <span class="quiz-spacer"></span>
+      <button class="linkbtn" id="tchClose">关闭</button>
+    </header>
+    <div class="tch-body" id="tchBody"></div>
+  </div>
+</div>
+
+<dialog id="settings" class="dlg">
+  <h2>接入模型</h2>
+  <p class="dlg-lead">
+    留空的项就用默认值。API Key 只存在你这台机器的浏览器里，不会进仓库。
+  </p>
+
+  <label class="dlg-row">
+    <span>接口地址</span>
+    <input id="cfgBaseUrl" type="text" spellcheck="false" placeholder="http://127.0.0.1:7863/v1">
+  </label>
+
+  <label class="dlg-row">
+    <span>模型</span>
+    <input id="cfgModel" type="text" spellcheck="false" placeholder="cn:deepseek-v4.1-flash">
+  </label>
+
+  <label class="dlg-row">
+    <span>API Key</span>
+    <input id="cfgKey" type="password" spellcheck="false" placeholder="留空则用本机 llm.local.json 里配的">
+  </label>
+
+  <label class="dlg-row">
+    <span>本机服务</span>
+    <input id="cfgProxy" type="text" spellcheck="false" placeholder="留空自动找 127.0.0.1:8770–8778">
+  </label>
+
+  <label class="dlg-row">
+    <span>温度</span>
+    <input id="cfgTemp" type="number" min="0" max="2" step="0.1" value="0.3">
+  </label>
+
+  <p class="dlg-note" id="cfgFound"></p>
+  <p class="dlg-result" id="cfgResult"></p>
+
+  <div class="dlg-actions">
+    <button id="cfgTest">测试连接</button>
+    <button id="cfgReset">恢复默认</button>
+    <button id="cfgClose">关闭</button>
+    <button id="cfgSave" class="primary">保存</button>
+  </div>
+</dialog>
+
+<script src="js/signal.js"></script>
+<script src="js/fft.js"></script>
+<script src="js/scope.js"></script>
+<script src="js/spectrum.js"></script>
+<script src="js/array.js"></script>
+<script src="js/timefreq.js"></script>
+<script src="js/constellation.js"></script>
+<script src="js/sandbox.js"></script>
+<script src="js/advisor.js"></script>
+<script src="js/llm.js"></script>
+<script src="js/tutor.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/quizui.js"></script>
+<script src="js/teacher.js"></script>
+<script src="js/teacherui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

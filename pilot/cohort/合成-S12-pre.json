@@ -1,0 +1,146 @@
+{
+  "app": "signallab",
+  "kind": "quiz-records",
+  "version": 1,
+  "exportedAt": "2026-10-16T14:28:00.076Z",
+  "who": "S12",
+  "records": [
+    {
+      "form": "pre",
+      "who": "S12",
+      "ms": 388411,
+      "finishedAt": "2026-10-17T06:19:53.632Z",
+      "score": {
+        "correct": 3,
+        "total": 10,
+        "percent": 30,
+        "byTopic": {
+          "timedomain": {
+            "correct": 1,
+            "total": 2
+          },
+          "sampling": {
+            "correct": 1,
+            "total": 2
+          },
+          "spectrum": {
+            "correct": 0,
+            "total": 2
+          },
+          "instrument": {
+            "correct": 1,
+            "total": 2
+          },
+          "array": {
+            "correct": 0,
+            "total": 2
+          }
+        },
+        "rows": [
+          {
+            "qid": "pre-1-t1",
+            "topic": "timedomain",
+            "topicName": "时域基本量",
+            "chosen": 1,
+            "answer": 1,
+            "chosenText": "1.0 kHz",
+            "answerText": "1.0 kHz",
+            "correct": true
+          },
+          {
+            "qid": "pre-2-t2",
+            "topic": "timedomain",
+            "topicName": "时域基本量",
+            "chosen": 0,
+            "answer": 2,
+            "chosenText": "250 mV",
+            "answerText": "500 mV",
+            "correct": false
+          },
+          {
+            "qid": "pre-3-s1",
+            "topic": "sampling",
+            "topicName": "采样定理",
+            "chosen": 1,
+            "answer": 2,
+            "chosenText": "3.0 kHz",
+            "answerText": "1.0 kHz",
+            "correct": false
+          },
+          {
+            "qid": "pre-4-s2",
+            "topic": "sampling",
+            "topicName": "采样定理",
+            "chosen": 2,
+            "answer": 2,
+            "chosenText": "8 个",
+            "answerText": "8 个",
+            "correct": true
+          },
+          {
+            "qid": "pre-5-p1",
+            "topic": "spectrum",
+            "topicName": "频谱与谐波",
+            "chosen": 2,
+            "answer": 1,
+            "chosenText": "500 Hz",
+            "answerText": "1.0 kHz",
+            "correct": false
+          },
+          {
+            "qid": "pre-6-p2",
+            "topic": "spectrum",
+            "topicName": "频谱与谐波",
+            "chosen": 3,
+            "answer": 2,
+            "chosenText": "频谱仪的扫宽不够，1.0 kHz 落在了屏幕外",
+            "answerText": "方波只由奇次谐波组成，偶次谐波的幅度本来就是零",
+            "correct": false
+          },
+          {
+            "qid": "pre-7-i1",
+            "topic": "instrument",
+            "topicName": "示波器操作",
+            "chosen": 1,
+            "answer": 0,
+            "chosenText": "垂直档位设得太小",
+            "answerText": "触发电平没有落在信号的电压范围之内",
+            "correct": false
+          },
+          {
+            "qid": "pre-8-i2",
+            "topic": "instrument",
+            "topicName": "示波器操作",
+            "chosen": 3,
+            "answer": 3,
+            "chosenText": "信号里带着直流偏置",
+            "answerText": "信号里带着直流偏置",
+            "correct": true
+          },
+          {
+            "qid": "pre-9-a1",
+            "topic": "array",
+            "topicName": "阵列测向",
+            "chosen": 1,
+            "answer": 2,
+            "chosenText": "+35° 和 -25°",
+            "answerText": "-25° 和 +35°",
+            "correct": false
+          },
+          {
+            "qid": "pre-10-a2",
+            "topic": "array",
+            "topicName": "阵列测向",
+            "chosen": 0,
+            "answer": 3,
+            "chosenText": "那是算法没收敛，多算出来一个峰",
+            "answerText": "那是栅瓣 —— 阵元间距太大，产生了方向上的「假像」",
+            "correct": false
+          }
+        ]
+      }
+    }
+  ],
+  "synthetic": true,
+  "note": "合成数据，非真实学生（pilot/make_cohort.js 生成）"
+}
