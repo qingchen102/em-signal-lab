@@ -311,6 +311,16 @@
         b.setAttribute('aria-selected', on ? 'true' : 'false');
       });
     }
+    // 顶栏的预设也只留这台仪器的，二十六个摆一排谁也找不到自己要看的那几个
+    if (els.presets) {
+      els.presets.querySelectorAll('.preset').forEach(function (b) {
+        b.hidden = b.dataset.instr !== id;
+      });
+      els.presets.querySelectorAll('.preset-group').forEach(function (g) {
+        g.hidden = g.dataset.instr !== id;
+      });
+      els.presets.scrollLeft = 0;
+    }
     if (els.controls) {
       els.controls.querySelectorAll('.group').forEach(function (g) {
         g.hidden = g.dataset.instr !== id;
@@ -787,10 +797,12 @@
         var lab = document.createElement('span');
         lab.className = 'preset-group' + (g.at === 0 ? ' preset-group--first' : '');
         lab.textContent = g.name;
+        lab.dataset.instr = g.instr || 'wave';
         els.presets.appendChild(lab);
       });
       var b = document.createElement('button');
       b.className = 'preset';
+      b.dataset.instr = instrOfPreset(idx);
       b.innerHTML = '<b>' + pre.name + '</b><i>' + pre.hint + '</i>';
       b.addEventListener('click', function () { applyPreset(idx); });
       els.presets.appendChild(b);

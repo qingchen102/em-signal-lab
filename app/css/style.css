@@ -97,6 +97,9 @@ body {
 }
 .preset-group--first { margin-left: 0; padding-left: 0; border-left: 0; }
 
+.preset[hidden],
+.preset-group[hidden] { display: none; }
+
 .preset {
   flex: 0 0 auto;
   display: flex;
@@ -111,7 +114,7 @@ body {
   text-align: left;
   transition: border-color .12s, background .12s;
 }
-.preset b { font-size: 12px; font-weight: 600; }
+.preset b { font-size: 12px; font-weight: 600; white-space: nowrap; }
 .preset i {
   font-size: 10px;
   font-style: normal;
