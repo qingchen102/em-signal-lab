@@ -10,3 +10,6 @@ shots/
 # Python
 __pycache__/
 *.pyc
+
+# BP 渲染中间产物（跑 submission/build_bp.py 会重新生成）
+submission/*.html
