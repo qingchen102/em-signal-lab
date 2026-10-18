@@ -647,7 +647,7 @@
       }
 
       /* ---- 右栏读数 ---- */
-      var pw = 196, px = W - pw - 8, py = 8;
+      var pw = 196, px = W - pw - 8, py = (opts.topPad || 0) + 8;
       ctx.fillStyle = 'rgba(8,11,16,0.82)';
       ctx.fillRect(px, py, pw, 150);
       ctx.strokeStyle = COL.axis; ctx.lineWidth = 1;
