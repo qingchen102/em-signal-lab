@@ -98,7 +98,7 @@ console.log('\n=== A. 几何原语 ===');
   const g0 = SB.fresnelPerp(1, 5.5);
   ok('法向入射 Γ ≈ −0.402（混凝土 εr=5.5）', near(g0, (1 - Math.sqrt(5.5)) / (1 + Math.sqrt(5.5)), 1e-12),
     g0.toFixed(5));
-  ok('Γ 是负的 —— 反射带相位翻转', g0 < 0);
+  ok('Γ 是负的，反射带相位翻转', g0 < 0);
   ok('掠入射 Γ → −1（全反射）', SB.fresnelPerp(1e-6, 5.5) < -0.99);
   ok('法向入射的反射最弱', Math.abs(g0) < Math.abs(SB.fresnelPerp(0.3, 5.5)));
 }

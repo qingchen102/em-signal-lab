@@ -1,5 +1,5 @@
 /* 用 Chrome DevTools Protocol 驱动无头 Chrome：打开页面、按顺序点几个元素、截图。
-   比 --screenshot 强的地方是能「点」—— 覆盖层、标签页、答题流程这些
+   比 --screenshot 强的地方是能「点」， 覆盖层、标签页、答题流程这些
    静态截图看不到的状态，必须先点出来。
 
    用法：node app/test/shot.js <url> <out.png> [选择器…]

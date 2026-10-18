@@ -60,7 +60,7 @@ console.log('\n[1] 卷子结构');
 // ---------------------------------------------------------------
 console.log('\n[2] 答案键：从题目自己的参数独立重算');
 {
-  // t1 —— 一屏 = 10 × 时基，里面装 periods 个周期
+  // t1，一屏 = 10 × 时基，里面装 periods 个周期
   const t1 = pre.find(q => q.id === 't1');
   const wantT1 = Q.fmtHz(t1.data.periods / (10 * t1.data.tpd));
   check('t1 频率 = periods / (10 × 时基)', t1.choices[t1.answer] === wantT1,
@@ -69,7 +69,7 @@ console.log('\n[2] 答案键：从题目自己的参数独立重算');
     Math.abs(t1.fig.state.freq - t1.data.f) / t1.data.f < 1e-12,
     'fig.freq=' + t1.fig.state.freq);
 
-  // t2 —— 峰峰值 = 格数 × 档位，峰值 = 一半
+  // t2，峰峰值 = 格数 × 档位，峰值 = 一半
   const t2 = pre.find(q => q.id === 't2');
   const wantT2 = Q.fmtV(t2.data.vpd * t2.data.divs / 2);
   check('t2 峰值 = 格数 × 档位 ÷ 2', t2.choices[t2.answer] === wantT2,
@@ -77,7 +77,7 @@ console.log('\n[2] 答案键：从题目自己的参数独立重算');
   check('t2 图上的振幅和答案一致',
     Math.abs(t2.fig.state.amp - t2.data.amp) < 1e-12, 'fig.amp=' + t2.fig.state.amp);
 
-  // s1 —— 折叠公式
+  // s1，折叠公式
   const s1 = pre.find(q => q.id === 's1');
   const fold = Math.abs(s1.data.f0 - Math.round(s1.data.f0 / s1.data.fs) * s1.data.fs);
   check('s1 折叠频率 = |f0 − round(f0/fs)·fs|', s1.choices[s1.answer] === Q.fmtHz(fold),
@@ -85,7 +85,7 @@ console.log('\n[2] 答案键：从题目自己的参数独立重算');
   check('s1 确实发生了混叠（f0 > fs/2）', s1.data.f0 > s1.data.fs / 2,
     'f0=' + s1.data.f0 + ' fs/2=' + s1.data.fs / 2);
 
-  // s2 —— 每周期采样点数
+  // s2，每周期采样点数
   const s2 = pre.find(q => q.id === 's2');
   const n = Math.round(s2.data.fs / s2.data.f0);
   check('s2 每周期采样点 = fs / f0', s2.choices[s2.answer] === n + ' 个',
@@ -93,9 +93,9 @@ console.log('\n[2] 答案键：从题目自己的参数独立重算');
 }
 
 // ---------------------------------------------------------------
-console.log('\n[3] 答案键：频谱题——用真算出来的谱去对');
+console.log('\n[3] 答案键：频谱题，用真算出来的谱去对');
 {
-  // p1 —— 谱上最左边那根线必须落在答案写的频率上
+  // p1，谱上最左边那根线必须落在答案写的频率上
   const p1 = pre.find(q => q.id === 'p1');
   const model = NS.signal.makeModel(p1.fig.state);
   const spec = NS.fft.harmonicSpectrum(model, p1.fig.state.freq, 1024);
@@ -104,7 +104,7 @@ console.log('\n[3] 答案键：频谱题——用真算出来的谱去对');
   check('p1 答案 = 谱上第一根线的频率', p1.choices[p1.answer] === Q.fmtHz(firstFreq),
     '答=' + p1.choices[p1.answer] + ' 谱上=' + Q.fmtHz(firstFreq));
 
-  // p2 —— 方波在 2f 处必须真的没有谱线（这才是「偶次谐波为零」）
+  // p2，方波在 2f 处必须真的没有谱线（这才是「偶次谐波为零」）
   const p2 = pre.find(q => q.id === 'p2');
   const m2 = NS.signal.makeModel(p2.fig.state);
   const sp2 = NS.fft.harmonicSpectrum(m2, p2.fig.state.freq, 1024);
@@ -122,9 +122,9 @@ console.log('\n[3] 答案键：频谱题——用真算出来的谱去对');
 }
 
 // ---------------------------------------------------------------
-console.log('\n[4] 答案键：阵列题——用真算出来的谱去对');
+console.log('\n[4] 答案键：阵列题，用真算出来的谱去对');
 {
-  // a1 —— MUSIC 的峰必须落在题目给出的来波方向上
+  // a1，MUSIC 的峰必须落在题目给出的来波方向上
   const a1 = pre.find(q => q.id === 'a1');
   const res = NS.array.simulate({
     M: a1.data.M, spacing: a1.data.spacing, snrDb: 20, sources: a1.data.angles.length,
@@ -141,7 +141,7 @@ console.log('\n[4] 答案键：阵列题——用真算出来的谱去对');
   check('a1 答案文本 = 两个来波方向', a1.choices[a1.answer] === wantA1,
     '答=' + a1.choices[a1.answer] + ' 期望=' + wantA1);
 
-  // a2 —— d=1.0λ 时 −30° 必须真的出现栅瓣
+  // a2，d=1.0λ 时 −30° 必须真的出现栅瓣
   const a2 = pre.find(q => q.id === 'a2');
   const res2 = NS.array.simulate({
     M: a2.data.M, spacing: a2.data.spacing, snrDb: 20, sources: 1,

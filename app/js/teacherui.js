@@ -1,8 +1,8 @@
 /* 信号实验室 · 教师端界面
  *
  * 两个页签，对应老师真正会做的两件事：
- *   「出练习」—— 挑知识点和层次，出一份能直接打印的练习卷加答案页。
- *   「看全班」—— 把学生交上来的成绩单拖进来，看知识点正确率和逐题错因，
+ *   「出练习」：挑知识点和层次，出一份能直接打印的练习卷加答案页。
+ *   「看全班」：把学生交上来的成绩单拖进来，看知识点正确率和逐题错因，
  *                以及最要紧的那个数：前后测能配对的人，平均提了多少分。
  *
  * 所有计算都在 teacher.js 里，这里只管画和收事件。
@@ -78,7 +78,7 @@
     if (!els.overlay) return;
     els.overlay.hidden = false;
     document.body.classList.add('tch-open');
-    // 打开时顺便把本机已有的记录捞一遍 —— 老师自己那台机器上做过测试的话，
+    // 打开时顺便把本机已有的记录捞一遍。老师自己那台机器上做过测试的话，
     // 一进来就能看到东西，不用先去翻文件。
     if (!st.records.length) loadLocal(true);
     render();
@@ -218,7 +218,7 @@
     if (!box) return;
     if (!st.ex) {
       box.innerHTML = '<p class="tch-empty">左边挑好条件，点「生成练习」。<br>' +
-        '卷子里的图和答案都是从实验台同一套代码算出来的 —— 学生做练习时看到的画面，' +
+        '卷子里的图和答案都是从实验台同一套代码算出来的。学生做练习时看到的画面，' +
         '和他在仪器面板上看到的完全一致。</p>';
       return;
     }
@@ -363,7 +363,7 @@
   }
 
   /* synth = 这批文件里有几份自报「合成数据」（pilot/make_cohort.js 生成的）。
-     教师端不拦它，但会在报告顶上把这件事说清楚 —— 拿假数据冒充真试点是最容易的翻车方式。 */
+     教师端不拦它，但会在报告顶上把这件事说清楚。拿假数据冒充真试点是最容易的翻车方式。 */
   function ingest(records, skipped, synth) {
     var seen = {};
     st.records.forEach(function (r) { seen[keyOf(r)] = 1; });
@@ -380,7 +380,7 @@
     st.agg = T.aggregate(st.records);
     renderClass();
     if (dup) {
-      // 不弹窗，报告里会写清楚 —— 老师连着拖两次同一批文件是常事，不该被打断。
+      // 不弹窗，报告里会写清楚。老师连着拖两次同一批文件是常事，不该被打断。
     }
     /* eslint-disable no-unused-vars */
     void added;
@@ -411,25 +411,25 @@
     var html = '';
 
     if (st.synth) {
-      html += '<p class="tch-warn">⚠️ 这批成绩单里有 <b>' + st.synth +
+      html += '<p class="tch-warn">注意：这批成绩单里有 <b>' + st.synth +
         ' 份自报「合成数据，非真实学生」</b>。它们可以拿来演练教师端，' +
-        '但<b>不能当作教学效果的证据</b> —— 下面任何一个数字引用出去之前都要先说清这一点。</p>';
+        '但<b>不能当作教学效果的证据</b>，下面任何一个数字引用出去之前都要先说清这一点。</p>';
     }
 
     html += '<div class="tch-cards">' +
       card('收到成绩单', agg.n + ' 份') +
       card('参与代号', agg.nStudents + ' 人' + (agg.anonymous ? '（另有 ' + agg.anonymous + ' 份没填代号）' : '')) +
-      card('前测', pre ? pre.percent + '%　<span class="dim">' + pre.n + ' 份</span>' : '——') +
-      card('后测', post ? post.percent + '%　<span class="dim">' + post.n + ' 份</span>' : '——') +
+      card('前测', pre ? pre.percent + '%　<span class="dim">' + pre.n + ' 份</span>' : '—') +
+      card('后测', post ? post.percent + '%　<span class="dim">' + post.n + ' 份</span>' : '—') +
       card('配对提升', agg.pairStat
         ? (agg.pairStat.delta > 0 ? '+' : '') + agg.pairStat.delta + ' 个百分点' +
           '<span class="dim">' + agg.pairStat.n + ' 人</span>'
-        : '——') +
+        : '—') +
       '</div>';
 
     if (agg.pairStat) {
       html += '<p class="tch-note">配对的 ' + agg.pairStat.n + ' 个人：平均从 ' +
-        agg.pairStat.avgPre + '% 到 ' + agg.pairStat.avgPost + '%。只有这个数说得清「学会了没有」——' +
+        agg.pairStat.avgPre + '% 到 ' + agg.pairStat.avgPost + '%。只有这个数说得清「学会了没有」。' +
         '把前测所有人的平均分和后测所有人的平均分直接相减是没有意义的，做题的人根本不是同一批。</p>';
     } else {
       html += '<p class="tch-note warn">还没有人前后测都做过，算不出配对提升。' +
@@ -462,7 +462,7 @@
           '<td>' + esc(d.topicName) + '</td>' +
           '<td>' + d.percent + '%' + bar(d.percent, d.percent < 60 ? 'bad' : (d.percent < 80 ? 'mid' : 'good')) + '</td>' +
           '<td>' + d.t.correct + '/' + d.t.total + '</td>' +
-          '<td>' + (d.topWrong ? esc(d.topWrong.text) + '　<i class="dim">' + d.topWrong.count + ' 人选</i>' : '——') + '</td>' +
+          '<td>' + (d.topWrong ? esc(d.topWrong.text) + '　<i class="dim">' + d.topWrong.count + ' 人选</i>' : '—') + '</td>' +
           '</tr>';
       }).join('') +
       '</tbody></table>';
@@ -485,11 +485,11 @@
     return '<table class="tch-table"><thead><tr><th>知识点</th><th>前测</th><th>后测</th>' +
       '<th>提升</th><th>题次</th></tr></thead><tbody>' +
       agg.topicRows.map(function (d) {
-        var dp = d.delta == null ? '——' :
+        var dp = d.delta == null ? '—' :
           (d.delta > 0 ? '+' : '') + d.delta;
         return '<tr><td>' + esc(d.name) + '</td>' +
-          '<td>' + (d.pre.total ? d.pre.percent + '%' + bar(d.pre.percent) : '——') + '</td>' +
-          '<td>' + (d.post.total ? d.post.percent + '%' + bar(d.post.percent) : '——') + '</td>' +
+          '<td>' + (d.pre.total ? d.pre.percent + '%' + bar(d.pre.percent) : '—') + '</td>' +
+          '<td>' + (d.post.total ? d.post.percent + '%' + bar(d.post.percent) : '—') + '</td>' +
           '<td>' + dp + '</td>' +
           '<td>' + d.pre.total + ' / ' + d.post.total + '</td></tr>';
       }).join('') +

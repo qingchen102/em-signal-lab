@@ -6,7 +6,7 @@
  *   node test/constellation_smoke.js
  *
  * 这里有一条贯穿全篇的原则：凡是教科书上有闭式答案的（点距、每符号能量、
- * 理论误符号率），都必须拿解析值对一遍 —— 仿真跑出来跟它吻合，才说明
+ * 理论误符号率），都必须拿解析值对一遍，仿真跑出来跟它吻合，才说明
  * 实现没写错；只跟自己比是发现不了错的。
  * ========================================================================== */
 'use strict';
@@ -294,7 +294,7 @@ for (const [id, db] of CASES) {
 }
 {
   /* 每个信噪比档都跑一遍：实测误符号数必须落在理论期望值的 4σ 里。
-     用统计判据而不是固定百分比 —— 理论值小的时候样本量本来就不够，
+     用统计判据而不是固定百分比，理论值小的时候样本量本来就不够，
      固定百分比会把正常的统计涨落当成 bug。 */
   let worstZ = 0, worstAt = '', checked = 0;
   for (const m of CO.MODS) {
@@ -440,7 +440,7 @@ for (const m of CO.MODS) {
     near(r.dmin, DMIN_EXACT[m.id], 1e-12));
 }
 {
-  /* 同一个信噪比下，阶数越高 margin 越小 —— 这就是整个实验台想讲的那句话 */
+  /* 同一个信噪比下，阶数越高 margin 越小，这就是整个实验台想讲的那句话 */
   const ms = CO.MODS.map((m) => CO.analyze({ mod: m.id, snrDb: 14 }).margin);
   ok('14 dB 下 margin 按阶数递减', ms.every((v, i) => i === 0 || v < ms[i - 1]),
     ms.map((v) => v.toFixed(2)).join(' > '));
@@ -525,7 +525,7 @@ head('N. 知识面板与 AI 提示词');
   ok('每张卡四段齐全（现在看到的 / 为什么 / 哪门课 / 再试试）', incomplete === '', incomplete);
   ok('星座卡不会把别的屏的卡弄脏', extra === '', extra);
 
-  /* 分界线应当随阶数整体右移 —— 这就是「要多少 dB 才够」的定量答案 */
+  /* 分界线应当随阶数整体右移，这就是「要多少 dB 才够」的定量答案 */
   const firstClean = {};
   for (const id of ids) {
     for (let db = 0; db <= 30; db += 0.5) {

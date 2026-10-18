@@ -24,6 +24,22 @@ SRC = os.path.join(HERE, os.pardir, "docs", "项目说明.md")
 HTML_OUT = os.path.join(HERE, "商业计划书.html")
 PDF_OUT = os.path.join(HERE, "信号实验室-商业计划书.pdf")
 
+CJK = re.compile(u"[\u3000-\u303f\u4e00-\u9fff\uff00-\uffef]")
+
+
+def join_cjk(lines):
+    """把折行拼回段落：两侧都是中日韩字符时不插空格。"""
+    s = ""
+    for ln in lines:
+        ln = ln.strip()
+        if not ln:
+            continue
+        if s and not (CJK.match(s[-1]) or CJK.match(ln[0])):
+            s += " "
+        s += ln
+    return s
+
+
 CHROME_CANDIDATES = [
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
     r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
@@ -176,7 +192,7 @@ def convert(md):
                 break
             buf.append(s)
             i += 1
-        out.append("<p>%s</p>" % inline(" ".join(buf)))
+        out.append("<p>%s</p>" % inline(join_cjk(buf)))
 
     return "\n".join(out)
 

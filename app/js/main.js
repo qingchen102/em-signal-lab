@@ -61,7 +61,7 @@
   };
 
   /* ======================================================================
-   * 控件定义 —— 界面从这里长出来，加一个旋钮只要加一行
+   * 控件定义，界面从这里长出来，加一个旋钮只要加一行
    * ==================================================================== */
   var GROUPS = [
     {
@@ -118,7 +118,7 @@
     },
     {
       title: '时频图',
-      hint: '横轴时间、纵轴频率 —— 才能看出“频率在变”',
+      hint: '横轴时间、纵轴频率，才能看出“频率在变”',
       items: [
         { id: 'tfScenario', type: 'select', label: '场景', def: 'burst', options: [
           ['steady', '单音持续'], ['chirp', '线性调频'], ['burst', '突发脉冲'],
@@ -135,7 +135,7 @@
     },
     {
       title: '星座图',
-      hint: '把比特摆到 I/Q 平面上 —— 抗噪能力就是「点距 vs 噪声圆圈」',
+      hint: '把比特摆到 I/Q 平面上，抗噪能力就是「点距 vs 噪声圆圈」',
       items: [
         { id: 'conMod', type: 'select', label: '调制方式', def: 'qpsk', options: [
           ['bpsk', 'BPSK（1 bit）'], ['qpsk', 'QPSK（2 bit）'], ['psk8', '8PSK（3 bit）'],
@@ -146,7 +146,7 @@
     },
     {
       title: '多径沙盒',
-      hint: '自己摆楼、拖发射机 —— 看多径怎么把测向带偏',
+      hint: '自己摆楼、拖发射机，看多径怎么把测向带偏',
       items: [
         { id: 'sbScene', type: 'select', label: '场景', def: 'canyon', options: [
           ['open', '开阔地'], ['canyon', '城市峡谷'], ['corner', '街角（挡住了）'], ['dense', '密集楼群']] },
@@ -193,29 +193,29 @@
         arrayM: 8, arrayD: 0.5, arraySnr: 20, arraySources: 2, arrayA1: -6, arrayA2: 6, arrayK: 200 } },
     { name: '时频图', hint: '时间上一小段，频率上一根线',
       set: { tfScenario: 'burst', tfFs: 10000, tfWin: 128, tfOverlap: 0.75, tfF1: 800, tfF2: 2500 } },
-    { name: '频率在爬', hint: '一根斜线 —— 频率随时间线性变化',
+    { name: '频率在爬', hint: '一根斜线，频率随时间线性变化',
       set: { tfScenario: 'chirp', tfFs: 10000, tfWin: 256, tfOverlap: 0.75, tfF1: 600, tfF2: 3000 } },
     { name: '窗长换一换', hint: '同一段信号，短窗和长窗看到的不一样',
       set: { tfScenario: 'seq', tfFs: 10000, tfWin: 64, tfOverlap: 0.75, tfF1: 800, tfF2: 2500 } },
     { name: '两个音被糊成一个', hint: '先后分开的两个音，长窗下看着像同时的',
       set: { tfScenario: 'seq', tfFs: 10000, tfWin: 512, tfOverlap: 0.75, tfF1: 800, tfF2: 2500 } },
-    { name: '真的同时', hint: '和上一张比一比 —— 长窗下两张图几乎一样',
+    { name: '真的同时', hint: '和上一张比一比，长窗下两张图几乎一样',
       set: { tfScenario: 'sim', tfFs: 10000, tfWin: 512, tfOverlap: 0.75, tfF1: 800, tfF2: 2500 } },
 
     { name: 'QPSK 星座图', hint: '四个点，噪声小圈离判决边界还远',
       set: { conMod: 'qpsk', conSnr: 16, conN: 400 } },
-    { name: '升到 64QAM', hint: '同样 16 dB，点挤成一片 —— 快是有代价的',
+    { name: '升到 64QAM', hint: '同样 16 dB，点挤成一片，快是有代价的',
       set: { conMod: 'qam64', conSnr: 16, conN: 400 } },
-    { name: '给 64QAM 补 9 dB', hint: '信噪比补回来它才干净 —— 这就是那笔交易',
+    { name: '给 64QAM 补 9 dB', hint: '信噪比补回来它才干净。这就是那笔交易',
       set: { conMod: 'qam64', conSnr: 25, conN: 400 } },
     { name: 'BPSK 为什么抗造', hint: '同样的 16 dB，两个点离得最远，一个都不错',
       set: { conMod: 'bpsk', conSnr: 16, conN: 400 } },
 
     { name: '一台发射机，三个方向', hint: '楼把信号弹回来，阵列看到的不止一个方向',
       set: { sbScene: 'canyon', sbOrder: 2, sbFreq: 2400e6, sbM: 8, sbSnr: 20 } },
-    { name: '楼把直达挡死了', hint: '只剩一条反射 —— 测出来的方向是墙的方向',
+    { name: '楼把直达挡死了', hint: '只剩一条反射，测出来的方向是墙的方向',
       set: { sbScene: 'corner', sbOrder: 2, sbFreq: 2400e6, sbM: 8, sbSnr: 20 } },
-    { name: '把反射关掉', hint: '只看直达 —— 回到开阔地做对照',
+    { name: '把反射关掉', hint: '只看直达，回到开阔地做对照',
       set: { sbScene: 'open', sbOrder: 0, sbFreq: 2400e6, sbM: 8, sbSnr: 20 } },
     { name: '密集楼群', hint: '两个反射角度差得很开，时延扩展也上去了',
       set: { sbScene: 'dense', sbOrder: 2, sbFreq: 2400e6, sbM: 8, sbSnr: 20 } }
@@ -517,7 +517,7 @@
     cache.trigger = NS.signal.findTrigger(cache.trigPath, state.triggerLevel, state.freq);
     cache.spec = NS.fft.harmonicSpectrum(cache.model, state.freq, 1024);
 
-    // 阵列那一屏跟时域参数无关，签名没变就不重算 —— 拖滑条时才不会卡
+    // 阵列那一屏跟时域参数无关，签名没变就不重算，拖滑条时才不会卡
     var ac = arrayConfig();
     var sig = ac.M + '|' + ac.spacing + '|' + ac.snrDb + '|' + ac.sources + '|'
       + ac.angles.join(',') + '|' + ac.snapshots + '|' + ac.seed;
@@ -553,7 +553,7 @@
         scene: sc0, buildings: sc0.buildings, tx: sc0.tx, rx: sc0.rx,
         maxOrder: bc.maxOrder, freqHz: bc.freqHz, arrayM: bc.arrayM
       });
-      // 把几何路径当成「同一路信号的相干副本」喂给阵列 —— 多径骗测向就骗在这里
+      // 把几何路径当成「同一路信号的相干副本」喂给阵列，多径骗测向就骗在这里
       cache.sbArr = null;
       if (cache.sb.arrPaths.length && NS.array) {
         var g0 = cache.sb.arrPaths[0].gain || 1;
@@ -729,7 +729,7 @@
    * 循环
    * ==================================================================== */
   function onChange() {
-    // 记下学生刚动了哪个旋钮 —— 助教靠这个才知道"你刚才把时基拧到 20 μs/div 了"
+    // 记下学生刚动了哪个旋钮，助教靠这个才知道"你刚才把时基拧到 20 μs/div 了"
     var t = Date.now();
     Object.keys(state).forEach(function (k) {
       if (prevState[k] !== undefined && prevState[k] !== state[k]) {

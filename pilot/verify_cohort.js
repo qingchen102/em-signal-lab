@@ -1,13 +1,13 @@
 'use strict';
 /*
  * ============================================================================
- *  合成队列的校验 —— **合成数据，非真实学生**
+ *  合成队列的校验，**合成数据，非真实学生**
  * ============================================================================
  *
  *  它干三件事：
  *    1. 把 pilot/cohort/ 下 88 个文件按老师收卷的真实路径读回来
  *       （Q.readRecords 会逐条校验，认不出的会说明原因而不是静默丢）。
- *    2. 用 T.aggregate 汇总，逐项断言报告里的数字 —— 断言的是「这些数
+ *    2. 用 T.aggregate 汇总，逐项断言报告里的数字，断言的是「这些数
  *       互相之间说得通」，不是「这些数等于某个写死的值」。
  *    3. 把汇总结果渲染成 pilot/报告样例.md。
  *
@@ -207,7 +207,7 @@ ok('CSV 行数与知识点数对得上', csv.split('\n').length > 10, csv.split(
 function pct(v) { return v == null ? '—' : v + '%'; }
 
 const L = [];
-L.push('# 全班报告样例 —— **合成数据，非真实学生**');
+L.push('# 全班报告样例，**合成数据，非真实学生**');
 L.push('');
 L.push('> 这份报告由 `pilot/cohort/` 下的**仿真队列**跑出来，**不是任何一次真实的前测 / 后测**。');
 L.push('> 队列由 `pilot/make_cohort.js` 生成（种子 20261016），题目取自 `app/js/quiz.js` 的真题面。');
@@ -243,7 +243,7 @@ L.push('| **只交了前测、再没出现的** | **' + preOnlyMean + '%** | ' +
 L.push('| 匿名卷（前测） | ' + anonPreMean + '% | ' + anonPre.length + ' 份 |');
 L.push('');
 L.push('「前后测所有人平均分相减」把前两行混在一起算，等于假设那 ' + onlyPre.length
-  + ' 个人如果交了后测会考得跟别人一样 —— 可他们本来只有 ' + preOnlyMean + '%。');
+  + ' 个人如果交了后测会考得跟别人一样，可他们本来只有 ' + preOnlyMean + '%。');
 L.push('他们被算进分母，前测平均被拉低，于是提升被吹大：相减法给出 +' + naive
   + '，配对法给出 +' + agg.pairStat.delta + '。');
 L.push('');
@@ -266,7 +266,7 @@ agg.weak.forEach(function (w, i) {
   L.push((i + 1) + '. **' + w.topicName + '**（' + w.form + ' 卷，' + w.id + '）：正确率 '
     + w.percent + '%（' + w.t.correct + '/' + w.t.total + '）');
   if (w.topWrong) {
-    L.push('   最常见错法：「' + w.topWrong.text + '」—— ' + w.topWrong.count + ' 人选了它');
+    L.push('   最常见错法：「' + w.topWrong.text + '」， ' + w.topWrong.count + ' 人选了它');
   }
 });
 L.push('');

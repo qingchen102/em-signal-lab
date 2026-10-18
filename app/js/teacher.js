@@ -2,15 +2,15 @@
  *
  * 这个文件管两件跟「一个班」有关的事：
  *
- *   1. 出练习 —— 按 知识点 × 层次 从题库里抽题，拼成一份能打印的练习卷和答案页。
+ *   1. 出练习，按 知识点 × 层次 从题库里抽题，拼成一份能打印的练习卷和答案页。
  *      学生端的前测/后测只有固定两份卷子（要配对比较，两套必须一模一样），
  *      练习卷不一样：它不需要配对，所以每次可以换一套数字，人人不同。
  *
- *   2. 看全班 —— 把学生交上来的成绩单合起来，算知识点正确率、逐题错因分布，
+ *   2. 看全班，把学生交上来的成绩单合起来，算知识点正确率、逐题错因分布，
  *      自动挑出最集中的几个卡点。
  *
  * 数据怎么从学生手上到老师这里：学生端导出 JSON 成绩单，老师那边一次拖进来一堆。
- * 刻意不走服务器 —— 一个班几十份文件，教学平台或者聊天工具传一下就完了，谁也不用配后端。
+ * 刻意不走服务器，一个班几十份文件，教学平台或者聊天工具传一下就完了，谁也不用配后端。
  * 哪天真要接后端，POST 上去的也是同一份 JSON，格式不用动。
  */
 (function (NS) {
@@ -36,7 +36,7 @@
     a2: 3, a3: 3
   };
 
-  // 蓝图：id 和 topic 直接从生成器自己问出来，不另外维护一份表 —— 免得跟 GENERATORS 漂移。
+  // 蓝图：id 和 topic 直接从生成器自己问出来，不另外维护一份表，免得跟 GENERATORS 漂移。
   // 用固定种子掷一次骰子探测；生成器是纯函数，这一下不改动任何状态。
   var BLUEPRINT = (Q.GENERATORS || []).concat(Q.EXTRAS || []).map(function (gen) {
     var probe = gen(NS.signal.mulberry32(20261015), 0);
@@ -96,7 +96,7 @@
 
   // 这个筛选条件下到底能出多少道「数字不一样」的题。
   // 老师说「出 12 题」时界面得先说清楚这一条够不够，不然卷子里会混进重题。
-  // 穷举掷骰子估一个数就够了，不用精确 —— 它是给人看的提示，不是判据。
+  // 穷举掷骰子估一个数就够了，不用精确，它是给人看的提示，不是判据。
   function inventory(opts) {
     var cands = select(opts);
     if (!cands.length) return 0;
@@ -204,7 +204,7 @@
       f.ms += rec.ms || 0;
       if (who) f.students[who] = 1;
 
-      // 没填代号的全归一个桶，并且不当作「一个人」计数 —— 不然收上来五份匿名卷，
+      // 没填代号的全归一个桶，并且不当作「一个人」计数，不然收上来五份匿名卷，
       // 报告里会凭空多出五个人。
       var key = who || '';
       var w = byWho[key] || (byWho[key] = { who: who, records: {} });
@@ -284,7 +284,7 @@
     qRows.sort(function (a, b) { return a.form.localeCompare(b.form) || a.index - b.index; });
 
     // 配对：同一个代号前后测都做了的，才谈得上「学会了没有」。
-    // 只做了一份的人不掺进来 —— 不然平均分会被「谁做了哪份」搅乱。
+    // 只做了一份的人不掺进来，不然平均分会被「谁做了哪份」搅乱。
     var paired = [];
     Object.keys(byWho).forEach(function (k) {
       var w = byWho[k];
@@ -305,7 +305,7 @@
       paired.forEach(function (p) { sp += p.pre; sq += p.post; });
       pairStat = {
         n: paired.length,
-        // 保留一位小数。取整会让报告自相矛盾 —— 「平均从 48% 到 60%，
+        // 保留一位小数。取整会让报告自相矛盾，「平均从 48% 到 60%，
         // 提高 11 个百分点」看着就像算错了（60-48=12）。一位小数时
         // 48.2 → 59.5、+11.3 三者互相能对上。
         avgPre: Math.round(sp / paired.length * 10) / 10,
@@ -314,7 +314,7 @@
       };
     }
 
-    // 卡点：样本够、正确率最低的那几个题型。样本太少的排掉 ——
+    // 卡点：样本够、正确率最低的那几个题型。样本太少的排掉 ，
     // 三个人做错和三十个人做错，不是一回事。
     var floor = Math.max(2, Math.ceil(list.length * 0.4));
     var weak = typeRows.filter(function (d) { return d.t.total >= floor; }).slice(0, 3);
@@ -345,7 +345,7 @@
     var pre = agg.forms.pre, post = agg.forms.post;
     if (pre && post) {
       out.push('前测 ' + pre.n + ' 份，平均正确率 ' + pre.percent + '%；后测 ' + post.n +
-        ' 份，平均正确率 ' + post.percent + '%。这两个数不能直接减 —— 做题的人不一样。');
+        ' 份，平均正确率 ' + post.percent + '%。这两个数不能直接减，做题的人不一样。');
     }
     if (agg.pairStat) {
       var d = agg.pairStat.delta;

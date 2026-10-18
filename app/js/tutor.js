@@ -130,7 +130,7 @@
     const ai = addMsg('ai', '');
     ai.body.innerHTML = '<span class="dots"><i></i><i></i><i></i></span>';
 
-    // 每轮都把当前仪器状态重新拼一遍——学生可能刚拧过旋钮
+    // 每轮都把当前仪器状态重新拼一遍，学生可能刚拧过旋钮
     const ctx = (NS.lab && NS.lab.context) ? NS.lab.context() : null;
     const system = NS.llm.SYSTEM_PROMPT
       + '\n\n===== 当前仪器状态（真值，请以此为准）=====\n'
@@ -211,7 +211,7 @@
         els.cfgFound.textContent = '已找到本机服务：' + r.url
           + (r.health && r.health.hasKey ? '（服务端已配 Key）' : '（服务端没配 Key）');
       } else {
-        els.cfgFound.textContent = '没找到本机服务 —— 直连上游多半会被 CORS 拦下。'
+        els.cfgFound.textContent = '没找到本机服务，直连上游多半会被 CORS 拦下。'
           + '在 em-signal-lab 目录里跑 python app/server.py 就能解决。';
       }
     });

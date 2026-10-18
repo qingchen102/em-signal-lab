@@ -68,7 +68,7 @@
    * 复数线性代数
    * ==================================================================== */
 
-  /* a^H R a —— R 是 Hermitian，结果必然是实数，取实部 */
+  /* a^H R a，R 是 Hermitian，结果必然是实数，取实部 */
   function quadForm(M, Rre, Rim, a) {
     var tre = new Float64Array(M), tim = new Float64Array(M);
     var i, j;
@@ -247,7 +247,7 @@
     var noiseAmp = Math.sqrt(Math.pow(10, -(cfg.snrDb || 0) / 10) / 2);
 
     if (cfg.paths && cfg.paths.length) {
-      /* 相干多径：所有路径是同一路信号的副本，共用同一串样值 —— 信源协方差因此是秩 1 的，
+      /* 相干多径：所有路径是同一路信号的副本，共用同一串样值，信源协方差因此是秩 1 的，
          这正是 MUSIC 会栽跟头的地方（它假定各信源不相关）。 */
       var pre = new Float64Array(K), pim = new Float64Array(K);
       for (k = 0; k < K; k++) {
@@ -345,7 +345,7 @@
 
     // MUSIC：噪声子空间 = 最小的 M-S 个特征向量
     var eig = eigHermitian(M, Rre, Rim);
-    // 多径模式下噪声子空间的维度要用「声明的信源个数」，不是物理路径数 ——
+    // 多径模式下噪声子空间的维度要用「声明的信源个数」，不是物理路径数 ，
     // 不然 MUSIC 会“作弊”把多径当成多个独立信源，就演不出它被骗的样子了。
     var nNoise = M - (cfg.paths ? Math.max(1, Math.round(cfg.sources || 1)) : S);
     if (nNoise >= 1) {

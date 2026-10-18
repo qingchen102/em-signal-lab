@@ -4,8 +4,8 @@
 
 它干两件事：
 
-  1. 把 app/ 当静态站点发出去 —— 页面于是有了真正的 http:// 源
-  2. 提供 /api/chat —— 把浏览器的请求转发给上游模型服务
+  1. 把 app/ 当静态站点发出去，页面于是有了真正的 http:// 源
+  2. 提供 /api/chat，把浏览器的请求转发给上游模型服务
 
 为什么非要第 2 件？
   上游中转站不响应 CORS 预检（OPTIONS 直接回 405）。浏览器从 file:// 打开时
@@ -14,7 +14,7 @@
 
   而且本服务对 /api/* 开了 Access-Control-Allow-Origin: *，
   所以就算你直接双击 index.html（file://），只要这个服务在跑，AI 面板照样能用
-  —— 它会自己去 127.0.0.1 上找。
+ ，它会自己去 127.0.0.1 上找。
 
 用法：
     python server.py                     # 默认 8770，被占用就往后找
@@ -26,7 +26,7 @@
     在 em-signal-lab/llm.local.json 里写
         {"baseUrl": "...", "apiKey": "sk-...", "model": "..."}
     该文件已被 .gitignore 排除，不会进公开仓库。
-    也可以完全不配 —— 界面上有「接入模型」入口，填了就用你填的。
+    也可以完全不配，界面上有「接入模型」入口，填了就用你填的。
 """
 
 from __future__ import annotations
@@ -235,7 +235,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._send_json({'error': '请求体不是合法 JSON'}, 400)
 
         cfg = dict(CONFIG)
-        # 浏览器上填的配置优先于本机文件 —— 这样别人 clone 下来也能用
+        # 浏览器上填的配置优先于本机文件，这样别人 clone 下来也能用
         for key in ('apiKey', 'baseUrl', 'model'):
             if payload.get(key):
                 cfg[key] = payload[key]
@@ -330,7 +330,7 @@ def main():
     print(f'  地址      {url}')
     print(f'  模型      {CONFIG.get("model")}')
     print(f'  上游      {CONFIG.get("baseUrl")}')
-    print(f'  API Key   {"已配置（来自 " + CONFIG_PATH.name + "）" if CONFIG.get("apiKey") else "未配置 —— 可在界面右上角「接入模型」里填"}')
+    print(f'  API Key   {"已配置（来自 " + CONFIG_PATH.name + "）" if CONFIG.get("apiKey") else "未配置，可在界面右上角「接入模型」里填"}')
     print('  ' + '-' * 46)
     print('  Ctrl+C 停止')
     print('')
