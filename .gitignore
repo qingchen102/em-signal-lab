@@ -17,3 +17,6 @@ submission/*.html
 # demo 录制的中间产物（帧序列上百 MB，重录即可再生）
 demo/_rec/
 demo/_rec.log
+
+# demo 重做音轨时的中间 wav
+demo/vo2/*.wav

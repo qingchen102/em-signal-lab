@@ -13,7 +13,7 @@
 
    `record.js` 用 Chrome DevTools Protocol 的 `Page.startScreencast` 逐帧抓图，同时注入一个可见光标和点击涟漪，所以画面里是真的在拖滑条、真的在按住楼拖动。每一章的开始时刻和每一次点击的时刻都记在 `_rec/meta.json`。
 
-2. 合成：
+2. 合成（从零重做，需要 `_rec/`）：
 
    ```
    python demo/build.py
@@ -21,15 +21,25 @@
 
    `build.py` 按 `meta.json` 的时间轴把帧重排成 25fps 序列，把 `vo/*.mp3` 逐章补齐到章长后拼成音轨，再叠上点击与转场的音效、左下角的章节角标、首尾淡入淡出。
 
-## 配音
+3. 只重做音轨与字幕（不需要 `_rec/`，拿现成的成片当画面）：
 
-`vo/00.mp3` … `vo/09.mp3` 是十段旁白，`vo/texts.json` 是原文，`vo/durs.json` 是每段时长（毫秒）。重新生成旁白用 `edge-tts`，音色 `zh-CN-YunxiNeural`：
+   ```
+   python demo/build2.py
+   ```
+
+   `build2.py` 重新合成十段旁白（带逐句时间戳），按章节起点摆成音轨、过一遍 loudnorm，把字幕写成 ASS 烧进画面，视频轨重编码。章节起点写死在脚本里的 `MARKS`，来自录制时的 `meta.json`。改旁白只需改 `vo/texts.json` 后重跑。
+
+## 配音与字幕
+
+`vo/texts.json` 是十段旁白的原文。音色 `zh-CN-YunxiNeural`，语速 `+4%`，由 `edge-tts` 合成：
 
 ```
-edge-tts --voice zh-CN-YunxiNeural --rate=+4% --text "……" --write-media vo/00.mp3
+python -m edge_tts --voice zh-CN-YunxiNeural --rate=+4%     --text "……" --write-media out.mp3 --write-subtitles out.srt
 ```
 
-改完旁白要重新算 `vo/durs.json`（`ffprobe` 读时长），`record.js` 按它给每一章排期。
+`--write-subtitles` 给出的逐句时间戳就是字幕的来源，`build2.py` 把它们按每行 18 字切开、按字数分配时长，再整体加上章节起点写成 ASS。字幕样式在 `build2.py` 的 `[V4+ Styles]` 里，白字黑描边、距底 104 像素，正好在左下角章节角标上方。
+
+`build.py` 那条老路还需要 `vo/durs.json`（每段时长，毫秒，`ffprobe` 读），`record.js` 按它给每一章排期；`build2.py` 不需要。
 
 ## 注意
 
