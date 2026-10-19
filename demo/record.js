@@ -120,6 +120,21 @@ async function dragSlider(id, toFrac, ms) {
   await sleep(120);
 }
 
+// 下拉框：不点开原生弹层（弹层会被录进去），只把光标停上去再改值
+async function setSelect(id, value, ms) {
+  const sel = `[data-param="${id}"]`;
+  const r = await rect(sel);
+  const cx = r.x + r.w / 2, cy = r.y + r.h / 2;
+  await glide(cx, cy, ms || 320);
+  await sleep(140);
+  await evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(sel)});
+    e.value=${JSON.stringify(String(value))};
+    e.dispatchEvent(new Event('change',{bubbles:true}));
+    return e.value;})()`);
+  clicks.push(Date.now());
+  await sleep(180);
+}
+
 async function typeText(text, per) {
   for (const ch of text) {
     await send('Input.insertText', { text: ch });
@@ -250,100 +265,163 @@ async function main() {
   await send('Page.startScreencast', { format: 'jpeg', quality: 80, maxWidth: 1440, maxHeight: 900, everyNthFrame: 1 });
   t0 = Date.now();
 
-  // 0 开场
+  // 0 开场：先抛现象，再报结构
   await chapter('00', async () => {
-    await glide(760, 470, 2600);
-    await sleep(400);
-  }, DUR['00'] / 1000 + TAIL / 1000);
-
-  // 1 混叠
-  await chapter('01', async () => {
-    await clickText('.preset', '混叠', 420);
-    await sleep(500);
-    await dragSlider('sampleRate', 0.62, 4200);
-    await sleep(600);
-    await dragSlider('sampleRate', 0.14, 2600);
-  }, DUR['01'] / 1000 + TAIL / 1000);
-
-  // 2 方波与谐波
-  await chapter('02', async () => {
-    await clickText('.preset', '方波与谐波', 420);
-    await sleep(500);
-    await dragSlider('freq', 0.42, 2400);
-    await sleep(400);
-    await dragSlider('freq', 0.34, 1200);
-  }, DUR['02'] / 1000 + TAIL / 1000);
-
-  // 3 带宽限制
-  await chapter('03', async () => {
-    await clickText('.preset', '带宽限制', 420);
-    await sleep(500);
-    await dragSlider('bandwidth', 0.06, 3000);
-  }, DUR['03'] / 1000 + TAIL / 1000);
-
-  // 4 沙盒
-  await chapter('04', async () => {
     await clickSel('.tab[data-instr="sb"]', 460);
     await sleep(600);
     await clickText('.preset', '一台发射机，三个方向', 420);
+    await sleep(900);
+    await glide(920, 520, 3200);
+    await glide(760, 430, 2600);
+    await sleep(4000);
+    await glide(1050, 300, 2400);
+    await sleep(9500);
+    await clickSel('.tab[data-instr="wave"]', 420);
+    await sleep(1200);
+    await glide(420, 300, 2200);
+  }, DUR['00'] / 1000 + TAIL / 1000);
+
+  // 1 信号发生器
+  await chapter('01', async () => {
+    await clickText('.preset', '干净正弦', 380);
+    await sleep(600);
+    await setSelect('wave', 'square', 700);
+    await sleep(1400);
+    await setSelect('wave', 'triangle', 600);
+    await sleep(600);
+    await setSelect('wave', 'sawtooth', 600);
+    await sleep(600);
+    await setSelect('wave', 'pulse', 600);
+    await sleep(900);
+    await dragSlider('duty', 0.24, 1800);
+    await sleep(400);
+    await setSelect('wave', 'sine', 600);
+    await sleep(400);
+    await dragSlider('freq', 0.660, 2000);
+    await sleep(500);
+    await dragSlider('noise', 0.36, 1800);
+    await sleep(500);
+    await dragSlider('noise', 0, 1200);
+  }, DUR['01'] / 1000 + TAIL / 1000);
+
+  // 2 示波器
+  await chapter('02', async () => {
+    await clickText('.preset', '干净正弦', 360);
+    await sleep(500);
+    await dragSlider('timePerDiv', 0.60, 1800);
     await sleep(700);
-    await dragBuilding(150, 230, 26, 34, 2200);
+    await dragSlider('timePerDiv', 0.42, 1600);
+    await sleep(500);
+    await dragSlider('voltsPerDiv', 0.30, 1800);
+    await sleep(900);
+    await dragSlider('voltsPerDiv', 0.73, 1600);
+    await sleep(400);
+    await dragSlider('sampleRate', 0.235, 2400);
+    await sleep(3600);
+    await dragSlider('sampleRate', 0.680, 2400);
+    await sleep(900);
+    await dragSlider('triggerLevel', 0.97, 2000);
+    await sleep(3000);
+    await dragSlider('triggerLevel', 0.50, 1600);
+  }, DUR['02'] / 1000 + TAIL / 1000);
+
+  // 3 频谱仪
+  await chapter('03', async () => {
+    await clickText('.preset', '方波与谐波', 380);
+    await sleep(1400);
+    await dragSlider('spanHz', 0.425, 2600);
+    await sleep(2600);
+    await dragSlider('bandwidth', 0.460, 3000);
+    await sleep(5200);
+    await dragSlider('bandwidth', 1.0, 2400);
+  }, DUR['03'] / 1000 + TAIL / 1000);
+
+  // 4 时频图
+  await chapter('04', async () => {
+    await clickSel('.tab[data-instr="tf"]', 420);
+    await sleep(2200);
+    await setSelect('tfWin', '32', 900);
+    await sleep(3400);
+    await setSelect('tfWin', '512', 900);
+    await sleep(3000);
+    await setSelect('tfScenario', 'chirp', 900);
+    await sleep(3600);
+    await setSelect('tfScenario', 'burst', 800);
+    await sleep(1200);
   }, DUR['04'] / 1000 + TAIL / 1000);
 
-  // 5 街角 + 提问
+  // 5 星座图
   await chapter('05', async () => {
-    await clickText('.preset', '楼把直达挡死了', 420);
-    await sleep(500);
-    await clickSel('.ptab[data-tab="ai"]', 380);
-    await sleep(300);
-    await clickSel('#ask', 320);
-    await sleep(200);
-    await typeText('为什么测出来的方向差了这么多', 34);
-    await sleep(250);
-    await clickSel('#sendBtn', 260);
+    await clickSel('.tab[data-instr="con"]', 420);
+    await sleep(2400);
+    await setSelect('conMod', 'qam64', 900);
+    await sleep(2600);
+    await dragSlider('conSnr', 0.533, 2400);
+    await sleep(3400);
+    await dragSlider('conSnr', 0.833, 2400);
+    await sleep(2200);
   }, DUR['05'] / 1000 + TAIL / 1000);
 
-  // 6 教师端
+  // 6 阵列测向
   await chapter('06', async () => {
+    await clickSel('.tab[data-instr="arr"]', 420);
+    await sleep(1200);
+    await dragSlider('arraySources', 0.5, 1400);
+    await sleep(1400);
+    await dragSlider('arrayM', 0, 1500);
+    await sleep(1100);
+    await dragSlider('arrayM', 0.467, 1600);
+    await sleep(1100);
+    await dragSlider('arrayD', 0.643, 2200);
+    await sleep(2600);
+  }, DUR['06'] / 1000 + TAIL / 1000);
+
+  // 7 多径沙盒
+  await chapter('07', async () => {
+    await clickSel('.tab[data-instr="sb"]', 420);
+    await sleep(1600);
+    await clickText('.preset', '一台发射机，三个方向', 400);
+    await sleep(2600);
+    await dragBuilding(150, 230, 26, 34, 2400);
+    await sleep(2400);
+    await clickText('.preset', '楼把直达挡死了', 400);
+    await sleep(3200);
+    await glide(700, 400, 2400);
+  }, DUR['07'] / 1000 + TAIL / 1000);
+
+  // 8 教师端
+  await chapter('08', async () => {
     await clickSel('#teacherBtn', 420);
-    await sleep(600);
-    await clickSel('#teacherOverlay [data-tab="class"]', 320);
+    await sleep(700);
+    await clickSel('#teacherOverlay [data-tab="make"]', 340);
     await sleep(500);
-    const files = fs.readdirSync(path.join(__dirname, 'pilot', 'cohort')).map(f => path.join(__dirname, 'pilot', 'cohort', f));
+    await clickSel('#tchGen', 340);
+    await sleep(1000);
+    await scrollBy('#tchBody', 620, 1800);
+    await sleep(400);
+    await clickSel('#teacherOverlay [data-tab="class"]', 340);
+    await sleep(600);
+    const files = fs.readdirSync(path.join(__dirname, '..', 'pilot', 'cohort')).map(f => path.join(__dirname, '..', 'pilot', 'cohort', f));
     const doc = await send('DOM.getDocument', { depth: -1 });
     const q = await send('DOM.querySelector', { nodeId: doc.root.nodeId, selector: '#tchFiles' });
     await send('DOM.setFileInputFiles', { files, nodeId: q.nodeId });
+    await sleep(1200);
+    await scrollBy('#tchBody', 240, 2600);
     await sleep(900);
-    await scrollBy('#tchBody', 520, 2400);
-  }, DUR['06'] / 1000 + TAIL / 1000);
-
-  // 7 出练习
-  await chapter('07', async () => {
-    await clickSel('#teacherOverlay [data-tab="make"]', 320);
-    await sleep(400);
-    await clickSel('#tchGen', 340);
-    await sleep(700);
-    await scrollBy('#tchBody', 900, 3200);
-  }, DUR['07'] / 1000 + TAIL / 1000);
-
-  // 8 AI 助教
-  await chapter('08', async () => {
-    await clickSel('#tchClose', 320);
-    await sleep(600);
-    await scrollBy('#chat', 420, 6000);
-    await sleep(500);
-    await scrollBy('#chat', 420, 5600);
+    await scrollBy('#tchBody', 180, 2400);
+    await sleep(1200);
   }, DUR['08'] / 1000 + TAIL / 1000);
 
   // 9 收尾
   await chapter('09', async () => {
-    await clickSel('.tab[data-instr="wave"]', 420);
-    await sleep(400);
-    await clickText('.preset', '干净正弦', 380);
-    await sleep(500);
-    await glide(1080, 300, 1800);
+    await clickSel('#tchClose', 320);
+    await sleep(700);
+    await clickSel('.tab[data-instr="wave"]', 380);
+    await sleep(600);
+    await clickText('.preset', '干净正弦', 360);
+    await sleep(900);
+    await glide(620, 520, 2400);
   }, DUR['09'] / 1000 + TAIL / 1000);
-
   await sleep(250);
   await send('Page.stopScreencast');
   await sleep(300);

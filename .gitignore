@@ -14,9 +14,13 @@ __pycache__/
 # BP 渲染中间产物（跑 submission/build_bp.py 会重新生成）
 submission/*.html
 
+# 成片不入库：二十兆上下，GitHub 那边传不动，平台是单独上传的
+submission/*.mp4
+
 # demo 录制的中间产物（帧序列上百 MB，重录即可再生）
 demo/_rec/
 demo/_rec.log
+demo/_rec.*.txt
 
 # demo 重做音轨时的中间 wav
 demo/vo2/*.wav
