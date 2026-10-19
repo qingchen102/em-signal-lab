@@ -20,3 +20,6 @@ demo/_rec.log
 
 # demo 重做音轨时的中间 wav
 demo/vo2/*.wav
+
+# BP 重新生成时若原文件被阅读器占用，会先写到这里
+submission/*-新.pdf

@@ -27,7 +27,7 @@
    python demo/build2.py
    ```
 
-   `build2.py` 重新合成十段旁白（带逐句时间戳），按章节起点摆成音轨、过一遍 loudnorm，把字幕写成 ASS 烧进画面，视频轨重编码。章节起点写死在脚本里的 `MARKS`，来自录制时的 `meta.json`。改旁白只需改 `vo/texts.json` 后重跑。
+   `build2.py` 重新合成十段旁白（带逐句时间戳），按章节起点摆成音轨、过一遍 loudnorm，再把字幕、章节标题卡、压黑转场一起写成一份 ASS 烧进画面，视频轨重编码。章节起点写死在脚本里的 `MARKS`，来自录制时的 `meta.json`。改旁白只需改 `vo/texts.json` 后重跑。
 
 ## 配音与字幕
 

@@ -205,6 +205,7 @@ def find_chrome():
 
 
 def main():
+    global PDF_OUT
     with open(SRC, "r", encoding="utf-8") as f:
         md = f.read()
 
@@ -232,7 +233,14 @@ def main():
 
     url = "file:///" + os.path.abspath(HTML_OUT).replace("\\", "/")
     if os.path.exists(PDF_OUT):
-        os.remove(PDF_OUT)
+        try:
+            os.remove(PDF_OUT)
+        except PermissionError:
+            # 文件被阅读器占用时，写到临时名再覆盖
+            alt = PDF_OUT.replace(".pdf", "-新.pdf")
+            print("原 PDF 被占用，先写到", os.path.basename(alt))
+            globals()["PDF_OUT"] = alt
+            PDF_OUT = alt
     cmd = [
         chrome, "--headless=new", "--disable-gpu", "--no-first-run",
         "--no-pdf-header-footer",

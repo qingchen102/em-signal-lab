@@ -23,6 +23,19 @@ MARKS = [
 ]
 TOTAL = 94.068
 
+TITLES = {
+    "00": ("信号实验室", "五台仪器、一个网页，双击就能跑"),
+    "01": ("混叠", "1 kHz 的信号，屏幕上却是一条 500 Hz 的波"),
+    "02": ("方波与谐波", "谐波一条一条落在基波的整数倍上"),
+    "03": ("带宽限制", "砍掉高次谐波，方波自己变圆"),
+    "04": ("多径沙盒", "只有一台发射机，阵列却报出三个方向"),
+    "05": ("直达被挡", "只剩一条反射，测出来的方向偏了 43 度"),
+    "06": ("教师端", "88 份成绩单，全班卡在哪一道题上一眼看到"),
+    "07": ("出练习", "按知识点和难度出卷，答案与讲解一起生成"),
+    "08": ("AI 助教", "拿着屏幕上的数字讲，不编"),
+    "09": ("纯前端，零依赖", "断网也能跑完整个演示"),
+}
+
 VIDEO = os.path.join(ROOT, os.pardir, "submission", "信号实验室-demo.mp4")
 OUT = os.path.join(ROOT, os.pardir, "submission", "_new-demo.mp4")
 
@@ -185,12 +198,35 @@ ScaledBorderAndShadow: yes
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Sub,%s,33,&H00FFFFFF,&H00FFFFFF,&H00101014,&H96000000,0,0,0,0,100,100,0.6,0,1,2.6,0.8,2,90,90,104,1
+Style: Card,%s,44,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
+Style: Dip,%s,20,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,7,0,0,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-""" % FONT
+""" % (FONT, FONT, FONT)
     lines = [head]
     count = 0
+
+    # 转场：章节交界处压黑 0.5 秒
+    for k, a, b in spans:
+        if k == "00":
+            continue
+        lines.append(r"Dialogue: 0,%s,%s,Dip,,0,0,0,,{\an7\pos(0,0)\p1\1c&H000000&\fad(150,150)}"
+                     r"m 0 0 l 1440 0 1440 900 0 900" % (ass_time(a - 0.17), ass_time(a + 0.17)))
+
+    # 标题卡：章节名 + 一句话，压在画面上方
+    for k, a, b in spans:
+        name, one = TITLES[k]
+        t0, t1 = a + 0.22, min(a + 3.05, b - 0.1)
+        fade = r"\fad(260,380)"
+        lines.append(r"Dialogue: 0,%s,%s,Card,,0,0,0,,{\an7\pos(356,116)\p1\1c&H20150E&\1a&H1C&%s}"
+                     r"m 0 0 l 712 0 712 152 0 152" % (ass_time(t0), ass_time(t1), fade))
+        lines.append(r"Dialogue: 0,%s,%s,Card,,0,0,0,,{\an7\pos(356,116)\p1\1c&HFFB974&\1a&H10&%s}"
+                     r"m 0 0 l 5 0 5 152 0 152" % (ass_time(t0), ass_time(t1), fade))
+        lines.append(r"Dialogue: 0,%s,%s,Card,,0,0,0,,{\an7\pos(384,134)\fs42\b1%s}%s  %s"
+                     % (ass_time(t0), ass_time(t1), fade, k, name))
+        lines.append(r"Dialogue: 0,%s,%s,Card,,0,0,0,,{\an7\pos(386,206)\fs24\c&H00D8D0C8&%s}%s"
+                     % (ass_time(t0), ass_time(t1), fade, one))
     for k, a, b in spans:
         for s, e, text in read_srt(os.path.join(VO, k + ".srt")):
             for cs, ce, ct in split_cue(s, e, text):
